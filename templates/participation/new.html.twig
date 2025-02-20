@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Participation{% endblock %}
+
+{% block body %}
+
+<h1>Faire un don au projet</h1>
+
+
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button class="btn btn-success">Valider la participation</button>
+    {{ form_end(form) }}
+    <h1>Create new Participation</h1>
+
+    {{ include('participation/_form.html.twig') }}
+
+    <a href="{{ path('app_participation_index') }}">back to list</a>
+{% endblock %}

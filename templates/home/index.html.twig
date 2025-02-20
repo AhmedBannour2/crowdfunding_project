@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <header class="bg-primary text-white text-center py-5">
+        <div class="container">
+            <h1 class="display-4">Bienvenue sur la plateforme de financement participatif</h1>
+            <p class="lead">Découvrez les derniers projets et participez à leur succès !</p>
+        </div>
+    </header>
+
+    <section class="container my-5">
+        <h2 class="text-center mb-4">Derniers projets</h2>
+        <div class="row">
+            {% for project in recentProjects %}
+                <div class="col-md-4">
+                    <div class="card project-card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ project.title }}</h5>
+                            <p class="card-text">
+                                <strong>Ouverture :</strong> {{ project.openingDate|date('d/m/Y') }}<br>
+                                <strong>Clôture :</strong> {{ project.closingDate|date('d/m/Y') }}
+                            </p>
+                            <a href="{{ path('project_show', { id: project.id }) }}" class="btn btn-primary w-100">Voir le projet</a>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <p class="text-center">Aucun projet récent.</p>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="container my-5">
+        <h2 class="text-center mb-4">Projets les plus populaires</h2>
+        <div class="row">
+            {% for project in popularProjects %}
+                <div class="col-md-4">
+                    <div class="card project-card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ project.title }}</h5>
+                            <p class="card-text">
+                                <strong>{{ project.participations|length }} participations</strong><br>
+                                <strong>Ouverture :</strong> {{ project.openingDate|date('d/m/Y') }}<br>
+                                <strong>Clôture :</strong> {{ project.closingDate|date('d/m/Y') }}
+                            </p>
+                            <a href="{{ path('project_show', { id: project.id }) }}" class="btn btn-success w-100">Voir le projet</a>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <p class="text-center">Aucun projet populaire.</p>
+            {% endfor %}
+        </div>
+    </section>
+
+    <footer class="footer bg-dark text-white text-center py-3 mt-5">
+        <p>&copy; 2025 Crowdfunding. Tous droits réservés.</p>
+    </footer>
+{% endblock %}

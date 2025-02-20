@@ -1,0 +1,94 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container my-5">
+        <h1 class="text-center mb-4">Dashboard Admin</h1>
+
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card text-white bg-primary shadow">
+                    <div class="card-header">Nombre d'Utilisateurs</div>
+                    <div class="card-body text-center">
+                        <h3 class="card-title">{{ nbUsers }}</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card text-white bg-success shadow">
+                    <div class="card-header">Nombre de Projets</div>
+                    <div class="card-body text-center">
+                        <h3 class="card-title">{{ nbProjects }}</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card text-white bg-warning shadow">
+                    <div class="card-header">Nombre de Dons</div>
+                    <div class="card-body text-center">
+                        <h3 class="card-title">{{ nbDonations }}</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card text-white bg-danger shadow">
+                    <div class="card-header">Montant Total des Dons</div>
+                    <div class="card-body text-center">
+                        <h3 class="card-title">{{ totalDonationAmount }} €</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="mt-5">Liste des Utilisateurs</h2>
+        <input type="text" id="searchUser" class="form-control mb-3" placeholder="Rechercher un utilisateur..." onkeyup="filterUsers()">
+
+        <table class="table table-hover shadow-sm">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Pseudonyme</th>
+                    <th>Email</th>
+                    <th>Rôles</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="userTable">
+                {% for user in users %}
+                    <tr>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.pseudonyme }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.roles|join(', ') }}</td>
+                        <td>
+                            <a href="#" class="btn btn-warning btn-sm">Modifier</a>
+                            <a href="#" class="btn btn-danger btn-sm">Supprimer</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center">Aucun utilisateur trouvé.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Filtrer les utilisateurs en temps réel
+        function filterUsers() {
+            let input = document.getElementById("searchUser").value.toLowerCase();
+            let rows = document.getElementById("userTable").getElementsByTagName("tr");
+
+            for (let i = 0; i < rows.length; i++) {
+                let nameCell = rows[i].getElementsByTagName("td")[1]; // Colonne "Pseudonyme"
+                if (nameCell) {
+                    let name = nameCell.textContent || nameCell.innerText;
+                    rows[i].style.display = name.toLowerCase().includes(input) ? "" : "none";
+                }
+            }
+        }
+    </script>
+{% endblock %}

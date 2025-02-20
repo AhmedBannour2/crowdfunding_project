@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Participations{% endblock %}
+
+{% block body %}
+    <div class="container my-5">
+        <h1 class="text-center mb-4">Liste des Participations</h1>
+
+        {% if participations is empty %}
+            <p class="text-center">Aucune participation enregistrée.</p>
+        {% else %}
+            <table class="table table-hover shadow-sm">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Montant (€)</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for participation in participations %}
+                        <tr>
+                            <td>{{ participation.id }}</td>
+                            <td>{{ participation.amount }}</td>
+                            <td>{{ participation.participantDate ? participation.participantDate|date('d/m/Y H:i') : '' }}</td>
+                            <td>
+                                <a href="{{ path('app_participation_show', {'id': participation.id}) }}" class="btn btn-info btn-sm">Voir</a>
+                                <a href="{{ path('app_participation_edit', {'id': participation.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+
+        
+    </div>
+{% endblock %}

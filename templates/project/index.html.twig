@@ -1,0 +1,96 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container my-5">
+        <h1 class="text-center mb-4">Liste des Projets</h1>
+
+        <!-- Barre de recherche -->
+        <div class="mb-4">
+            <input type="text" id="searchInput" class="form-control" placeholder="Rechercher un projet..." onkeyup="filterProjects()">
+        </div>
+
+        <table class="table table-hover shadow">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Titre</th>
+                    <th>
+                        Montant 
+                        <button onclick="sortTable()" class="btn btn-sm btn-secondary">⇅</button>
+                    </th>
+                    <th>Créateur</th>
+                    <th>Dates</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="projectTable">
+                {% for project in projects %}
+                    <tr>
+                        <td>{{ project.id }}</td>
+                        <td>{{ project.title }}</td>
+                        <td>{{ project.amount }} €</td>
+                        <td>{{ project.creator.pseudonyme }}</td>
+                        <td>
+                            {{ project.openingDate|date('d/m/Y') }} - 
+                            {{ project.closingDate|date('d/m/Y') }}
+                        </td>
+                        <td>
+                            <a href="{{ path('project_show', { 'id': project.id }) }}" class="btn btn-info btn-sm">Voir</a>
+
+                            {% if project.creator == app.user %}
+                                <a href="{{ path('project_edit', { 'id': project.id }) }}" class="btn btn-warning btn-sm">Modifier</a>
+
+                                <form action="{{ path('project_delete', { 'id': project.id }) }}" method="post" style="display:inline;">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ project.id) }}">
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce projet ?');">
+                                        Supprimer
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center">Aucun projet trouvé.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="text-center mt-4">
+            <a href="{{ path('app_project_new') }}" class="btn btn-primary">Créer un projet</a>
+        </div>
+    </div>
+
+    <script>
+        // Filtrer les projets
+        function filterProjects() {
+            let input = document.getElementById("searchInput").value.toLowerCase();
+            let rows = document.getElementById("projectTable").getElementsByTagName("tr");
+
+            for (let i = 0; i < rows.length; i++) {
+                let titleCell = rows[i].getElementsByTagName("td")[1]; // Colonne "Titre"
+                if (titleCell) {
+                    let title = titleCell.textContent || titleCell.innerText;
+                    rows[i].style.display = title.toLowerCase().includes(input) ? "" : "none";
+                }
+            }
+        }
+
+        // Trier par montant
+        function sortTable() {
+            let table = document.getElementById("projectTable");
+            let rows = Array.from(table.getElementsByTagName("tr"));
+
+            rows.sort((a, b) => {
+                let amountA = parseFloat(a.getElementsByTagName("td")[2].textContent) || 0;
+                let amountB = parseFloat(b.getElementsByTagName("td")[2].textContent) || 0;
+                return amountB - amountA;
+            });
+
+            for (let row of rows) {
+                table.appendChild(row);
+            }
+        }
+    </script>
+{% endblock %}
